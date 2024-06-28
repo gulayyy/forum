@@ -357,18 +357,26 @@ func AddQuestionHandler(w http.ResponseWriter, r *http.Request) {
 	hatalar := datahata{}
 	hasError := false
 
-	session, _ := store.Get(r, "session-name")
-	kullaniciad, ok := session.Values["username"].(string)
-	if !ok || !soruYetkisi[kullaniciad] {
-		hatalar.Sorugiris = "Soru sormak için giriş yapmalısınız."
-		hasError = true
-	}
-
 	if r.Method == http.MethodPost {
 		err := r.ParseForm()
 		if err != nil {
 			handleInternalServerError(w, err)
 			return
+		}
+
+		title := r.FormValue("title")
+		description := r.Form["kategori[]"]
+
+		if len(description) == 0 {
+			hatalar.Sorugiris = "En az bir kategori seçmelisiniz."
+			hasError = true
+		}
+
+		session, _ := store.Get(r, "session-name")
+		kullaniciad, ok := session.Values["username"].(string)
+		if !ok || !soruYetkisi[kullaniciad] {
+			hatalar.Sorugiris = "Soru sormak için giriş yapmalısınız."
+			hasError = true
 		}
 
 		if hasError {
@@ -391,9 +399,6 @@ func AddQuestionHandler(w http.ResponseWriter, r *http.Request) {
 			}
 			return
 		}
-
-		title := r.FormValue("title")
-		description := r.Form["kategori[]"]
 
 		err = AddQuestion(title, description, kullaniciad)
 		if err != nil {
