@@ -336,23 +336,22 @@ func getQuestions() ([]Question, error) {
 }
 
 func AddQuestion(title string, description []string, username string) error {
-    db, err := sql.Open("sqlite3", "./Forum.db")
-    if err != nil {
-        return fmt.Errorf("veritabanı bağlantısı sırasında hata oluştu: %v", err)
-    }
-    defer db.Close()
+	db, err := sql.Open("sqlite3", "./Forum.db")
+	if err != nil {
+		return fmt.Errorf("veritabanı bağlantısı sırasında hata oluştu: %v", err)
+	}
+	defer db.Close()
 
-    // Concatenate description slice into a single string
-    descriptionStr := strings.Join(description, ", ")
+	// Concatenate description slice into a single string
+	descriptionStr := strings.Join(description, ", ")
 
-    query := "INSERT INTO questions (Title, Description, Username, CreatedAt, Likes, Dislikes) VALUES (?, ?, ?, ?, 0, 0)"
-    _, err = db.Exec(query, title, descriptionStr, username, time.Now())
-    if err != nil {
-        return fmt.Errorf("soru eklenirken hata oluştu: %v", err)
-    }
-    return nil
+	query := "INSERT INTO questions (Title, Description, Username, CreatedAt, Likes, Dislikes) VALUES (?, ?, ?, ?, 0, 0)"
+	_, err = db.Exec(query, title, descriptionStr, username, time.Now())
+	if err != nil {
+		return fmt.Errorf("soru eklenirken hata oluştu: %v", err)
+	}
+	return nil
 }
-
 
 func AddQuestionHandler(w http.ResponseWriter, r *http.Request) {
 	hatalar := datahata{}
@@ -645,10 +644,13 @@ func KategoriyiAl(w http.ResponseWriter, r *http.Request) {
 		// Form verisini al
 		kategori := r.FormValue("al")
 
-		// Kategori dizisi oluştur
-		kategoriler := []string{kategori}
+		// Eğer "Tümü" butonu seçildiyse kategoriler dizisini boş bırak
+		var kategoriler []string
+		if kategori != "Tümü" {
+			kategoriler = []string{kategori}
+		}
 
-		// Kategoriye göre soruları al
+		// Kategoriye göre veya tüm soruları al
 		questions, err := KategoriyeGoreGetir(kategoriler)
 		if err != nil {
 			handleInternalServerError(w, err)
@@ -672,54 +674,62 @@ func KategoriyiAl(w http.ResponseWriter, r *http.Request) {
 }
 
 func KategoriyeGoreGetir(kategoriler []string) ([]Question, error) {
-    db, err := sql.Open("sqlite3", "./Forum.db")
-    if err != nil {
-        return nil, fmt.Errorf("veritabanı bağlantısı sırasında hata oluştu: %v", err)
-    }
-    defer db.Close()
+	db, err := sql.Open("sqlite3", "./Forum.db")
+	if err != nil {
+		return nil, fmt.Errorf("veritabanı bağlantısı sırasında hata oluştu: %v", err)
+	}
+	defer db.Close()
 
-    var questions []Question
-    var rows *sql.Rows
+	var questions []Question
+	var rows *sql.Rows
 
-    // Temel sorguyu oluştur
-    query := `SELECT ID, Title, Description, Username, CreatedAt, Likes, Dislikes FROM Questions`
-    var args []interface{}  // interface herhangi bir veri türünü temsil edebilir farklı türlerde veri eklemmemize yardımcı olur.
+	if len(kategoriler) > 0 {
+		// Eğer kategoriler varsa, belirtilen kategorilere göre soruları getir
+		query := `SELECT ID, Title, Description, Username, CreatedAt, Likes, Dislikes FROM Questions WHERE`
+		var args []interface{}
 
-    if len(kategoriler) > 0 {
-        // Eğer kategoriler varsa WHERE koşulunu ekle
-        query += " WHERE"
-        for i, kategori := range kategoriler {
-            if i > 0 {
-                query += " OR" // kategoriler diliminde birden fazla değer varsa diye 
-            }
-            query += " Description LIKE ?"
-            args = append(args, "%"+kategori+"%")   // istenen metni aramak için bu yöntemi kullnadık.
-        }
-    }
+		for i, kategori := range kategoriler {
+			if i > 0 {
+				query += " OR"
+			}
+			query += " Description LIKE ?"
+			args = append(args, "%"+kategori+"%")
+		}
 
-    rows, err = db.Query(query, args...)
-    if err != nil {
-        return nil, fmt.Errorf("sorgu sırasında hata oluştu: %v", err)
-    }
-    defer rows.Close()
+		rows, err = db.Query(query, args...)
+		if err != nil {
+			return nil, fmt.Errorf("sorgu sırasında hata oluştu: %v", err)
+		}
+	} else {
+		// Eğer kategori belirtilmemişse, tüm soruları getir
+		query := `SELECT ID, Title, Description, Username, CreatedAt, Likes, Dislikes FROM Questions`
+		rows, err = db.Query(query)
+		if err != nil {
+			return nil, fmt.Errorf("sorgu sırasında hata oluştu: %v", err)
+		}
+	}
 
-    for rows.Next() {
-        var question Question
-        if err := rows.Scan(&question.ID, &question.Title, &question.Description, &question.Username, &question.CreatedAt, &question.Likes, &question.Dislikes); err != nil {
-            return nil, fmt.Errorf("satır tarama sırasında hata oluştu: %v", err)
-        }
+	defer rows.Close()
 
-        comments, err := GetCommentsForQuestion(question.ID)
-        if err != nil {
-            return nil, fmt.Errorf("yorumlar alınırken hata oluştu: %v", err)
-        }
-        question.Comments = comments
+	for rows.Next() {
+		var question Question
+		if err := rows.Scan(&question.ID, &question.Title, &question.Description, &question.Username, &question.CreatedAt, &question.Likes, &question.Dislikes); err != nil {
+			return nil, fmt.Errorf("satır tarama sırasında hata oluştu: %v", err)
+		}
 
-        questions = append(questions, question)
-    }
+		comments, err := GetCommentsForQuestion(question.ID)
+		if err != nil {
+			return nil, fmt.Errorf("yorumlar alınırken hata oluştu: %v", err)
+		}
+		question.Comments = comments
 
-    return questions, nil
+		questions = append(questions, question)
+	}
+
+	return questions, nil
 }
+
+
 
 func UpdateLikeDislike(userID, questionID int, action string) error {
 	db, err := sql.Open("sqlite3", "./Forum.db")
