@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{.Username}}'s Questions</title>
+    <style>
+     body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    padding-top: 60px; /* Navbar height */
+    margin: 0;
+    color: #333; /* Text color adjusted */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background-color: #ffffff;
+    border-radius: 8px; /* Increased border radius for a softer look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+li h2 {
+    margin-top: 0;
+    color: #007bff; /* Adjusted heading color */
+}
+
+p {
+    color: #666;
+    margin: 10px 0;
+}
+
+.meta {
+    color: #999;
+    font-size: 14px;
+}
+
+.comment-item {
+    background-color: #f9f9f9;
+    border-radius: 8px; /* Increased border radius */
+    padding: 10px;
+    margin-top: 10px;
+    margin-left: 20px;
+}
+
+.comment-item strong {
+    font-weight: bold;
+    color: #333;
+}
+
+.comment-item p {
+    color: #666;
+    margin: 5px 0;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Questions by {{.Username}}</h1>
+    {{if .Questions}}
+        <ul>
+            {{range .Questions}}
+                <li>
+                    <h2><a href="/comment?question_id={{.ID}}">{{.Title}}</a></h2>
+                    <p>{{.Description}}</p>
+                    <p class="meta">Created at: {{.CreatedAt}}</p>
+                    <p>Likes: {{.Likes}}, Dislikes: {{.Dislikes}}</p>
+                    <details>
+                        <summary>Comments</summary>
+                        <ul>
+                            {{range .Comments}}
+                                <li class="comment-item">{{.Comment}} by <strong>{{.KullaniciAdi}}</strong> at {{.CreatedAt}}</li>
+                            {{end}}
+                        </ul>
+                    </details>
+
+                </li>
+            {{end}}
+        </ul>
+    {{else}}
+        <p>No questions found.</p>
+    {{end}}
+</body>
+</html>

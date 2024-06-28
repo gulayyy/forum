@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Category }} Kategorisindeki Sorular</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        li h2 {
+            margin-top: 0;
+        }
+        p {
+            color: #666;
+        }
+        .meta {
+            color: #999;
+            font-size: 14px;
+        }
+        .comments {
+            margin-top: 10px;
+        }
+        .comment {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+        .comment p {
+            margin: 0;
+        }
+        .comment .meta {
+            font-size: 12px;
+            color: #888;
+        }
+        .comment-area {
+            margin-top: 10px;
+        }
+        .comment-area textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .comment-area button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .comment-area button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ .Category }} Kategorisindeki Sorular</h1>
+    <ul>
+        {{ range .Questions }}
+        <li>
+            <details>
+                <summary>
+                    <a href="/comment?question_id={{.ID}}"><h2>{{.Description}}</h2></a>
+                    <p>{{.Title}}</p>
+                    <p class="meta">Asked by {{.Username}} on {{.CreatedAt.Format "2006-01-02 15:04:05"}}</p>
+                </summary>
+                <div class="comments">
+                    <h3>Yorumlar:</h3>
+                    {{range .Comments}}
+                    <div class="comment">
+                        <strong>{{.KullaniciAdi}}:</strong>
+                        <p>{{.Comment}}</p>
+                        <p class="meta">{{.CreatedAt.Format "2006-01-02 15:04:05"}}</p>
+                    </div>
+                    {{else}}
+                    <p>Bu soru için henüz yorum yok.</p>
+                    {{end}}
+                </div>
+            </details>
+        </li>
+        {{ else }}
+        <li>Bu kategoride soru bulunmamaktadır.</li>
+        {{ end }}
+    </ul>
+    
+</body>
+</html>

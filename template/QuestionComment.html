@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Username}}'s Commented Questions</title>
+    <style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    margin: 0;
+    padding: 0;
+    color: #ffffff; /* Text color changed to white */
+}
+
+header {
+    background-color: #6a11cb; /* Adjusted to match navbar background */
+    color: #ffffff;
+    text-align: center;
+    padding: 1em 0;
+    margin-bottom: 20px; /* Added margin bottom for spacing */
+}
+
+h1 {
+    margin: 0;
+}
+
+main {
+    max-width: 800px;
+    margin: 2em auto;
+    background-color: #ffffff; /* Changed background to white */
+    padding: 1em 2em;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #333; /* Text color adjusted */
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin-bottom: 2em;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #ddd; /* Adjusted border color */
+}
+
+h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+}
+
+h2 a {
+    color: #007bff; /* Adjusted link color to match button and link style */
+    text-decoration: none;
+}
+
+h2 a:hover {
+    text-decoration: underline;
+}
+
+p {
+    color: #666;
+    line-height: 1.6;
+    margin: 0.5em 0;
+}
+
+details {
+    background-color: #f9f9f9;
+    padding: 0.5em;
+    border-radius: 5px;
+}
+
+summary {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.comment-list {
+    margin-top: 1em;
+    padding-left: 1em;
+    border-left: 2px solid #ccc;
+}
+
+.comment-list li {
+    margin-bottom: 0.5em;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{.Username}}'s Commented Questions</h1>
+    </header>
+    <main>
+        {{if .Questions}}
+            <ul>
+                {{range .Questions}}
+                    <li>
+                        <h2><a href="/comment?question_id={{.ID}}">{{.Title}}</a></h2>
+                        <p>{{.Description}}</p>
+                        <p>Asked by: {{.Username}} on {{.CreatedAt}}</p>
+                        <p>Likes: {{.Likes}} | Dislikes: {{.Dislikes}}</p>
+                        <details>
+                            <summary>Comments</summary>
+                            <ul class="comment-list">
+                                {{range .Comments}}
+                                    <li>
+                                        <p>Commented by: {{.KullaniciAdi}} on {{.CreatedAt}}</p>
+                                    </li>
+                                {{end}}
+                            </ul>
+                        </details>
+                    </li>
+                {{end}}
+            </ul>
+        {{else}}
+            <p>You haven't commented on any questions yet.</p>
+        {{end}}
+    </main>
+</body>
+</html>

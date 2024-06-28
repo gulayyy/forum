@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beğenilen Sorular</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            margin: 0;
+            padding: 20px;
+            color: #ffffff; /* Metin rengi beyaz yapıldı */
+        }
+        h1 {
+            color: #ffffff; /* Başlık rengi beyaz yapıldı */
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #ffffff; /* Paragraf metin rengi beyaz yapıldı */
+            line-height: 1.6;
+            margin: 0.5em 0;
+        }
+        .question {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 20px;
+            transition: transform 0.3s;
+            color: #333; /* Soru içeriği rengi siyah yapıldı */
+        }
+        .question:hover {
+            transform: translateY(-5px);
+        }
+        .question h2 {
+            color: #444;
+            margin-top: 0;
+        }
+        .question p {
+            color: #666;
+        }
+        .question ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        .question li {
+            list-style-type: none;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid #ddd;
+            margin: 30px 0;
+        }
+        .question-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #999;
+        }
+        .question-info p {
+            margin: 0;
+        }
+        details summary {
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        details[open] summary {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Beğenilen Sorular</h1>
+    <p>{{.Username}} BEĞENDİKLERİ</p>
+    {{ range .Questions }}
+        <div class="question">
+            <h2><a href="/comment?question_id={{.ID}}">{{.Title}}</a></h2>
+            <p>{{ .Description }}</p>
+            <div class="question-info">
+                <p>Oluşturan: {{ .Username }}</p>
+                <p>Beğeniler: {{ .Likes }} | Beğenmeyenler: {{ .Dislikes }}</p>
+            </div>
+            <details>
+                <summary>Yorumlar</summary>
+                <ul>
+                    {{ range .Comments }}
+                        <li>{{ .KullaniciAdi }}: {{ .Comment }}</li>
+                    {{ end }}
+                </ul>
+            </details>
+        </div>
+        <hr>
+    {{ end }}
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yorumlar ve Sorular</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            padding-top: 60px; /* Navbar height */
+        }
+        .navbar {
+            background-color: #6a11cb;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar-brand {
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .navbar-brand:hover {
+            color: #ffffff;
+        }
+        .navbar-toggler-icon {
+            color: #ffffff;
+        }
+        .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffffff;
+        }
+        .jumbotron {
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 3rem 1rem;
+            border-radius: 10px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+            color: #ffffff;
+        }
+        .btn-outline-secondary:hover {
+            color: #ffffff;
+            background-color: #343a40;
+        }
+        .footer {
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 20px 0;
+            margin-top: 20px;
+        }
+        .comment-list {
+            margin-top: 20px;
+        }
+        .comment-item {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .comment-item strong {
+            color: #333333;
+        }
+        .comment-item p {
+            color: #666666;
+            margin-bottom: 10px;
+        }
+        .comment-item .meta {
+            font-size: 14px;
+            color: #999999;
+        }
+        .comment-item form {
+            display: inline;
+        }
+        .comment-item button {
+            padding: 5px 10px;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+        }
+        .comment-item button:hover {
+            background-color: #0056b3;
+        }
+        .add-question {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .add-question button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .add-question button:hover {
+            background-color: #0056b3;
+        }
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            margin-bottom: 0.5rem;
+        }
+        input[type="text"], textarea, select {
+            display: block;
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #ffffff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        textarea {
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Alışveriş Forum</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Giriş</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/kayit">Kaydol</a>
+                    </li>
+                    <li class="nav-item">
+                        <form action="/logout" method="post" style="display:inline;">
+                            <button type="submit" class="nav-link btn btn-link" style="padding: 0; color: #ffffff;">Çıkış Yap</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="jumbotron">
+            <h1 class="display-4">Yorumlar ve Sorular</h1>
+            <p class="lead">Sorularınıza gelen yorumları burada görebilirsiniz.</p>
+        </div>
+
+        <h2>Yorumlar</h2>
+        {{if .Comments}}
+            <div class="comment-list">
+                {{range .Comments}}
+                    <div class="comment-item">
+                        <strong>{{.KullaniciAdi}}</strong>: {{.Comment}}
+                        <p>Beğeniler: {{.Clikes}} | Beğenmeyenler: {{.Cdislikes}}</p>
+                        <form action="/likecomment" method="POST">
+                            <input type="hidden" name="comment_id" value="{{.ID}}">
+                            <button type="submit" class="btn btn-outline-success btn-sm">👍</button>
+                        </form>
+                        <form action="/dislikecomment" method="POST">
+                            <input type="hidden" name="comment_id" value="{{.ID}}">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">👎</button>
+                        </form>
+                    </div>
+                {{end}}
+            </div>
+        {{else}}
+            <p>Yorum bulunamadı.</p>
+        {{end}}
+
+        <form action="/comment" method="POST" class="add-question">
+            <input type="hidden" name="question_id" value="{{.Question.ID}}">
+            <div class="form-group">
+                <label for="comment">Yorum:</label>
+                <textarea id="comment" name="comment" rows="4" required></textarea>
+            </div>
+            <div class="button-container">
+                <button type="submit" class="btn btn-custom">Gönder</button>
+                <a href="/questions" class="btn btn-outline-secondary">Sorulara Dön</a>
+            </div>
+        </form>
+    </div>
+
+    <footer class="footer text-center">
+        <div class="container">
+            <span>© 2023 Alışveriş Forum. Her hakkı saklıdır.</span>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

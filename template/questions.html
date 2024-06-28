@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questions - Alışveriş Forum</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            padding-top: 60px; /* Navbar height */
+        }
+        .navbar {
+            background-color: #6a11cb;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+        .navbar-brand {
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+        }
+        .navbar-brand:hover {
+            color: #ffffff;
+        }
+        .navbar-toggler-icon {
+            color: #ffffff;
+        }
+        .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffffff;
+        }
+        .jumbotron {
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 3rem 1rem;
+            border-radius: 10px;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+            color: #ffffff;
+        }
+        .btn-outline-secondary:hover {
+            color: #ffffff;
+            background-color: #343a40;
+        }
+        .footer {
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 20px 0;
+            margin-top: 20px;
+        }
+        .question-card {
+            margin-top: 20px;
+        }
+        .question-card .card-header {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        .add-question {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .add-question button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .add-question button:hover {
+            background-color: #0056b3;
+        }
+        .comment-item {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .button-container {
+            display: flex;
+            gap: 10px;
+        }
+        .comment-section {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ccc;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            margin-bottom: 0.5rem;
+        }
+        input[type="text"], textarea, select {
+            display: block;
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .btn-custom {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Alışveriş Forum</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/register">Giriş</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/kayit">Kaydol</a>
+                    </li>
+                    <li class="nav-item">
+                        <form action="/logout" method="post" style="display:inline;">
+                            <button type="submit" class="nav-link btn btn-link" style="padding: 0; color: #ffffff;">Çıkış Yap</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="jumbotron">
+            <h1 class="display-4">Sorular</h1>
+            <p class="lead">Alışverişle ilgili tüm sorularınızı sorun ve toplulukla paylaşın.</p>
+        </div>
+
+        <div class="add-question">
+            <h2>Yeni Soru Ekle</h2>
+            
+<form action="/addquestion" method="post">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required>
+    <br>
+    <label for="kategori">Kategori Seçiniz:</label>
+    <div>
+        <input type="checkbox" id="elektronik" name="kategori[]" value="Elektronik">
+        <label for="elektronik">Elektronik</label>
+    </div>
+
+       <div>
+        <input type="checkbox" id="evyasam" name="kategori[]" value="Ev & Yaşam">
+        <label for="ev_yasam">Ev & Yaşam</label>
+    </div>
+
+    <div>
+        <input type="checkbox" id="moda" name="kategori[]" value="Moda">
+        <label for="moda">Moda</label>
+    </div>
+ 
+    <div>
+        <input type="checkbox" id="kozmetik" name="kategori[]" value="Kozmetik">
+        <label for="kozmetik">Kozmetik</label>
+    </div>
+    <div>
+        <input type="checkbox" id="spor_outdoor" name="kategori[]" value="Spor & Outdoor">
+        <label for="spor_outdoor">Spor & Outdoor</label>
+    </div>
+    <br>
+    <button type="submit">Submit</button>
+    <br>
+    {{if .Sorugiris}}
+    <span style="color:red">{{.Sorugiris}}</span>
+    {{end}}
+</form>
+        </div>
+
+        <ul>
+            {{range .Questions}}
+            <div class="card question-card">
+                <div class="card-body">
+                    <h5 class="card-title">{{.Title}}</h5>
+                    <p class="meta">Soran: {{.Username}} - Tarih: {{.CreatedAt}}</p>
+                    <p>Beğeniler: {{.Likes}} | Beğenmeyenler: {{.Dislikes}}</p>
+                    <div class="button-container">
+                        <form method="post" action="/like">
+                            <input type="hidden" name="question_id" value="{{.ID}}">
+                            <button type="submit" class="btn btn-outline-success btn-sm">👍</button>
+                        </form>
+                        <form method="post" action="/dislike">
+                            <input type="hidden" name="question_id" value="{{.ID}}">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">👎</button>
+                        </form>
+                        <a href="/comment?question_id={{.ID}}" class="btn btn-primary btn-sm">Detayları Gör</a>
+                    </div>
+                    <details>
+                        <summary>Detayları Gör</summary>
+                        <p>{{.Description}}</p>
+                        <div class="comment-section">
+                            <h6>Yorumlar</h6>
+                            <ul>
+                                {{range .Comments}}
+                                <div class="comment-item">
+                                    <strong>{{.KullaniciAdi}}</strong>: {{.Comment}}
+                                    <p>Beğeniler: {{.Clikes}} | Beğenmeyenler: {{.Cdislikes}}</p>
+                                    <form action="/likecomment" method="POST" style="display:inline;">
+                                        <input type="hidden" name="comment_id" value="{{.ID}}">
+                                        <button type="submit" class="btn btn-outline-success btn-sm">👍</button>
+                                    </form>
+                                    <form action="/dislikecomment" method="POST" style="display:inline;">
+                                        <input type="hidden" name="comment_id" value="{{.ID}}">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">👎</button>
+                                    </form>
+                                </div>
+                                {{end}}
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+            </div>
+            {{end}}
+        </ul>
+    </div>
+
+    <footer class="footer text-center">
+        <div class="container">
+            <span>© 2023 Alışveriş Forum. Her hakkı saklıdır.</span>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
