@@ -1,4 +1,5 @@
 FROM PROJESİ
+
 Bu proje, kullanıcıların çeşitli konularda tartışmalar yapabileceği, mesaj gönderebileceği ve yorum yapabileceği bir forum uygulamasıdır. Aşağıda proje hakkında detaylı bilgiler ve kurulum talimatları bulunmaktadır.
 
 
@@ -17,13 +18,15 @@ Beğenme ve Beğenmeme: Kullanıcılar mesajları beğenebilir veya beğenmeyebi
 Kullanıcı Profilleri ve Ayarları: Kullanıcılar profil bilgilerini görüntüleyebilir ve düzenleyebilir.
 
 
-Docker Konteynerları:
+DOCKER KONTEYNERLERİ:
+
 Docker, uygulama ve bağımlılıklarını bir araya getirip izole edilmiş bir ortamda çalıştırmak için konteyner teknolojisini kullanır. Bu, bir uygulamayı bir sistemden bağımsız olarak çalıştırmanın ve taşımanın bir yoludur.
 
-Docker İmajları:
+DOCKER İMAJLARI:
+
 Docker imajları, bir konteynerın çalıştırılabilir bir versiyonunu tanımlayan temel yapı taşlarıdır. İmajlar, bir uygulamanın çalıştırılması için gerekli olan her şeyi içerir: kod, çalıştırma zamanı, sistem araçları, kütüphaneler ve bağımlılıklar.
 
-Dockerfile:
+DOCKERFİLE:
 
 Docker imajlarını oluşturmak için kullanılan metin dosyalarıdır. Dockerfile, bir uygulamanın imajını adım adım oluşturan talimatları içerir.
  
@@ -41,11 +44,9 @@ Uygulamamızın gerçekleşeceği portu  konteyner adı ve kullancağımız Imag
 
 " docker images " -----> Imageslarımızı gösterir
 
-
 " docker pull kullaniciAdi/imagesadi "  ----> Başka bir kişinin Imagesının kulanmamızı sağlar 
 
 " docker exec -it <konteyner_adı veya konteyner_id> /bin/bash " ---> KOnteynerımızn terminaline erişmemizi sağlar 
-
 
 " docker stop 'konteynerid' " ---> Çalışan konteynerı durdurmayı sağlar 
 
