@@ -1,4 +1,4 @@
-FROM PROJESİ
+FORUM PROJESİ
 
 Bu proje, kullanıcıların çeşitli konularda tartışmalar yapabileceği, mesaj gönderebileceği ve yorum yapabileceği bir forum uygulamasıdır. Aşağıda proje hakkında detaylı bilgiler ve kurulum talimatları bulunmaktadır.
 
