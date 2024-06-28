@@ -4,13 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .Category }} Kategorisindeki Sorular</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
             margin: 0;
-            padding: 20px;
+            padding-top: 70px; /* Navbar height */
         }
+        .navbar {
+            background-color: #6a11cb;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .navbar-brand {
+            color: #ffffff !important;
+        }
+      
         h1, h2 {
             color: #333;
         }
@@ -76,34 +85,54 @@
     </style>
 </head>
 <body>
-    <h1>{{ .Category }} Kategorisindeki Sorular</h1>
-    <ul>
-        {{ range .Questions }}
-        <li>
-            <details>
-                <summary>
-                    <a href="/comment?question_id={{.ID}}"><h2>{{.Description}}</h2></a>
-                    <p>{{.Title}}</p>
-                    <p class="meta">Asked by {{.Username}} on {{.CreatedAt.Format "2006-01-02 15:04:05"}}</p>
-                </summary>
-                <div class="comments">
-                    <h3>Yorumlar:</h3>
-                    {{range .Comments}}
-                    <div class="comment">
-                        <strong>{{.KullaniciAdi}}:</strong>
-                        <p>{{.Comment}}</p>
-                        <p class="meta">{{.CreatedAt.Format "2006-01-02 15:04:05"}}</p>
-                    </div>
-                    {{else}}
-                    <p>Bu soru için henüz yorum yok.</p>
-                    {{end}}
-                </div>
-            </details>
-        </li>
-        {{ else }}
-        <li>Bu kategoride soru bulunmamaktadır.</li>
-        {{ end }}
-    </ul>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Alışveriş Forum</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     
+    <div class="container">
+        <h1>{{ .Category }} Kategorisindeki Sorular</h1>
+        <ul>
+            {{ range .Questions }}
+            <li>
+                <details>
+                    <summary>
+                        <h2><a href="/comment?question_id={{.ID}}">{{.Description}}</a></h2>
+                        <p>{{.Title}}</p>
+                        <p class="meta">Asked by {{.Username}} on {{.CreatedAt.Format "2006-01-02 15:04:05"}}</p>
+                    </summary>
+                    <div class="comments">
+                        <h3>Yorumlar:</h3>
+                        {{range .Comments}}
+                        <div class="comment">
+                            <strong>{{.KullaniciAdi}}:</strong>
+                            <p>{{.Comment}}</p>
+                            <p class="meta">{{.CreatedAt.Format "2006-01-02 15:04:05"}}</p>
+                        </div>
+                        {{else}}
+                        <p>Bu soru için henüz yorum yok.</p>
+                        {{end}}
+                    </div>
+                </details>
+            </li>
+            {{ else }}
+            <li>Bu kategoride soru bulunmamaktadır.</li>
+            {{ end }}
+        </ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
